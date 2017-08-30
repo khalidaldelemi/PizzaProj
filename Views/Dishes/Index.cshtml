@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PizzaOnLine.Models.Dish>
+﻿@model IEnumerable<PizzaOnLine.Models.Category>
 @inject PizzaOnLine.Services.IngredientService ingredent
 
 @{
@@ -8,14 +8,31 @@
 <h2>Index</h2>
 
 
-    <table class="table">
+
+<div>
+    @foreach (var cat in Model)
+    {
+        <hr />
+       <p>@cat.Name</p>
+        @foreach (var item in cat.dishes)
+        {
+            <hr />
+            @item.Name
+            @item.Price
+            @ingredent.IngredentByDish(item.DishId)
+            
+        }
+    }
+</div>
+
+    @*<table class="table">
             <thead>
                 <tr>
                         <th>
                             @Html.DisplayNameFor(model => model.Name)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Price)
+                            @Html.DisplayNameFor(model => model.)
                         </th>
                     <th>
                         Category
@@ -63,4 +80,4 @@
 
     </tbody>
 }
-        </table>
+        </table>*@
