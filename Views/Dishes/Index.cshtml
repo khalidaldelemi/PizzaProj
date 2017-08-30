@@ -1,0 +1,66 @@
+﻿@model IEnumerable<PizzaOnLine.Models.Dish>
+@inject PizzaOnLine.Services.IngredientService ingredent
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+
+    <table class="table">
+            <thead>
+                <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Price)
+                        </th>
+                    <th>
+                        Category
+                    </th>
+                    <th>
+                       Ingerdents
+                    </th>
+                </tr>
+            </thead>
+           
+@foreach (var item in Model)
+{
+    <tbody>
+     
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                  </td>           
+                                  
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                      @Html.DisplayFor(modelItem => item.Category.Name)
+                       </td>
+                    <td>
+                       <span>@ingredent.IngredentByDish(item.DishId)</span> 
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.DishId">Edit</a> 
+                        <a asp-action="Details" asp-route-id="@item.DishId">Details</a>
+                    </td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                         
+                            <a asp-action="Details" asp-route-id="@item.DishId">Details</a> 
+                            <a asp-action="Delete" asp-route-id="@item.DishId">Delete</a>
+                        </td>
+                    }
+
+                </tr>
+            
+        
+
+    </tbody>
+}
+        </table>
