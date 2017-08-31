@@ -29,5 +29,19 @@ namespace PizzaOnLine.Services
             }
             return dishIngredents;
         }
+        public void RemoveIngredientsByDish(int id)
+        {
+            var dishIng = _context.DishIngredients.Where(d => d.DishId == id );
+            foreach (var item in dishIng)
+            {
+                
+               
+                    _context.Remove(item);
+                
+            }
+          
+
+            _context.SaveChanges();
+        }
     }
 }

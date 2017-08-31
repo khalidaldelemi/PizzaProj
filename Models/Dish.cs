@@ -11,7 +11,6 @@ namespace PizzaOnLine.Models
         public string Name { get; set; }
         public int Price { get; set; }
         public List<DishIngredient> DishIngredient { get; set; }
-        
         public Category Category { get; set; }
         public int CategoryId { get; set; }
 
