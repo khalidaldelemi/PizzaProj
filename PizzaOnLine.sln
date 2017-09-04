@@ -8,11 +8,17 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		LockalIIS|Any CPU = LockalIIS|Any CPU
+		LockallIIS|Any CPU = LockallIIS|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1842C5CC-D4B4-4B3F-AE25-99A62B88F801}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1842C5CC-D4B4-4B3F-AE25-99A62B88F801}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1842C5CC-D4B4-4B3F-AE25-99A62B88F801}.LockalIIS|Any CPU.ActiveCfg = Lockal IIS|Any CPU
+		{1842C5CC-D4B4-4B3F-AE25-99A62B88F801}.LockalIIS|Any CPU.Build.0 = Lockal IIS|Any CPU
+		{1842C5CC-D4B4-4B3F-AE25-99A62B88F801}.LockallIIS|Any CPU.ActiveCfg = LockallIIS|Any CPU
+		{1842C5CC-D4B4-4B3F-AE25-99A62B88F801}.LockallIIS|Any CPU.Build.0 = LockallIIS|Any CPU
 		{1842C5CC-D4B4-4B3F-AE25-99A62B88F801}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1842C5CC-D4B4-4B3F-AE25-99A62B88F801}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

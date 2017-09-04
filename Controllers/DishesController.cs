@@ -16,12 +16,12 @@ namespace PizzaOnLine.Controllers
     {
 
         private readonly ApplicationDbContext _context;
-        private readonly IngredientService ingredient;
+        private readonly IngredientService _ingredient;
 
         public DishesController(ApplicationDbContext context,IngredientService ingredientService)
         {
             _context = context;
-            ingredient = ingredientService;
+            _ingredient = ingredientService;
         }
 
         // GET: Dishes
@@ -80,7 +80,7 @@ namespace PizzaOnLine.Controllers
                 //    Name = dish.Name,
                 //    Price = dish.Price,
                 //    CategoryId = category.CategoryId
-                foreach (var ingredient in ingredient.AllIngredient())
+                foreach (var ingredient in _ingredient.AllIngredient())
                 {
                     var dishIngredient = new DishIngredient
                     {
@@ -106,13 +106,15 @@ namespace PizzaOnLine.Controllers
             }
 
 
-            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.DishId == id);
+            var dish = await _context.Dishes.Include(di=>di.DishIngredient).
+                ThenInclude(d=>d.Ingredient).
+                SingleOrDefaultAsync(m => m.DishId == id);
             if (dish == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", dish.CategoryId);
-          
+            ViewData["Catlist"] = new SelectList(_context.Categories, "CategoryId", "Name", dish.CategoryId);
+
             return View(dish);
         }
 
@@ -132,8 +134,8 @@ namespace PizzaOnLine.Controllers
             {
                 try
                 {
-                    ingredient.RemoveIngredientsByDish(id);
-                    foreach (var item in ingredient.AllIngredient())
+                    _ingredient.RemoveIngredientsByDish(id);
+                    foreach (var item in _ingredient.AllIngredient())
                     {
                         if (true)
                         {
@@ -141,7 +143,8 @@ namespace PizzaOnLine.Controllers
                             {
                                 DishId=id,
                                 IngredientId = item.Id,
-                                
+                                Enabel=form.Keys.Any(k=> k== $"Ingredient-{item.Id}")
+
 
                             };
                             _context.Add(newDish);
@@ -167,7 +170,7 @@ namespace PizzaOnLine.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", dish.CategoryId);
+            ViewData["Catlist"] = new SelectList(_context.Categories, "CategoryId", "Name", dish.CategoryId);
          
             return View(dish);
         }
