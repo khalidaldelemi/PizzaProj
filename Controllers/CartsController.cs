@@ -30,12 +30,12 @@ namespace PizzaOnLine.Controllers
         {
             var test = _cartservice.AddToCart(HttpContext, id);
 
-            var toSession = JsonConvert.SerializeObject(test.ToString());
-            HttpContext.Session.SetString("Cart", toSession);
+            //var toSession = JsonConvert.SerializeObject(test.ToString());
+            //HttpContext.Session.SetString("Cart", toSession);
             //return View(await _context.Carts.ToListAsync());
-            var carList = new List<Cart>();
-            carList.Add(test);
-            return View(carList);
+            //var carList = new List<Cart>();
+            //carList.Add(test);
+            return View(test);
         }
 
         // GET: Carts/Details/5

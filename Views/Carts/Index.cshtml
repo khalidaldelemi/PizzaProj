@@ -1,4 +1,5 @@
-﻿@model IEnumerable<PizzaOnLine.Models.Cart>
+﻿@*@model IEnumerable<PizzaOnLine.Models.Cart>*@
+@model PizzaOnLine.Models.Cart
 @{
     ViewData["Title"] = "Index";
 }
@@ -16,20 +17,16 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Cartitems)
         {
             <tr>
-                
-                    @foreach (var itemName in item.Cartitems)
-                    {
-                        <td>
-                            @Html.DisplayFor(modelItem => itemName.Dish.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => itemName.Dish.Price)
-                        </td>
-                    }
-                
+                <td>
+                    @Html.DisplayFor(modelItem => item.DishsName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DishPrice)
+                </td>
+
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.CartId">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.CartId">Details</a> |
