@@ -9,7 +9,7 @@ namespace PizzaOnLine.Services
     public class DishService
     {
         private readonly ApplicationDbContext _context;
-        public DishService(ApplicationDbContext context)
+        public DishService (ApplicationDbContext context)
         {
             _context = context;
         }

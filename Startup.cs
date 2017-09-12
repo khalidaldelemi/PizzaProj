@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PizzaOnLine.Data;
 using PizzaOnLine.Models;
 using PizzaOnLine.Services;
+using Newtonsoft.Json;
 
 namespace PizzaOnLine
 {
@@ -43,9 +44,13 @@ namespace PizzaOnLine
             services.AddTransient<RoleManager<IdentityRole>>();
             services.AddTransient<IngredientService>();
             services.AddTransient<DishService>();
-           
+            services.AddTransient<CartService>();
+            services.AddSession();
 
-            services.AddMvc();
+
+
+
+            services.AddMvc().AddJsonOptions(opt => { opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +60,7 @@ namespace PizzaOnLine
         {
             if (env.IsDevelopment())
             {
+                
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
@@ -63,7 +69,7 @@ namespace PizzaOnLine
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            app.UseSession();
             app.UseStaticFiles();
 
             app.UseAuthentication();

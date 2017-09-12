@@ -29,8 +29,8 @@
                 @*string check = true ? "checked" : "";*@
                    @foreach (var item in ingred.AllIngredient())
                    {
-                       var check = _dishService.HasIngerdient(Model.DishId, item.Id) ? "checked" : "";
-                       <input type="checkbox" name="Ingredient-@item.Id" @check />
+                       var check = _dishService.HasIngerdient(Model.DishId, item.IngredientId) ? "checked" : "";
+                       <input type="checkbox" name="Ingredient-@item.IngredientId" @check />
                        <span asp-for="@item .Name">@item.Name</span>
                    }
 

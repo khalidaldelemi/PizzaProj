@@ -30,7 +30,18 @@ namespace PizzaOnLine.Data
                 .WithMany(i => i.DishIngredients)
                 .HasForeignKey(di => di.IngredientId);
 
-          
+            builder.Entity<CartItemIngredient>()
+.HasKey(ci => new { ci.CartItemId, ci.IngredientId });
+
+            builder.Entity<CartItemIngredient>()
+                .HasOne(ci => ci.CartItem)
+                .WithMany(c => c.CartItemIngredient)
+                .HasForeignKey(ci => ci.CartItemId);
+
+            builder.Entity<CartItemIngredient>()
+                .HasOne(ci => ci.Ingredient)
+                .WithMany(i => i.cartItemIngredient)
+                .HasForeignKey(ci => ci.IngredientId);
 
 
 
@@ -43,5 +54,9 @@ namespace PizzaOnLine.Data
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<DishIngredient> DishIngredients { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<CartItemIngredient> CartItemIngredients { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

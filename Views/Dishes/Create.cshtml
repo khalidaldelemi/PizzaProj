@@ -21,7 +21,7 @@
             <div class="form-group">
                 @foreach (var item in IngredientService.AllIngredient())
                 {
-                    <input type="checkbox" name="checkboxes-@item.Id" value="checkboxes-@item.Id" />
+                    <input type="checkbox" name="checkboxes-@item.IngredientId" value="checkboxes-@item.IngredientId" />
                     <label asp-for="@item.Name">@item.Name</label>
                     <br />
                 }

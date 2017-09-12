@@ -1,0 +1,28 @@
+﻿@model PizzaOnLine.Models.Cart
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Cart</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Cartitems)
+        </dt>
+        <dd>
+         @foreach (var item in Model.Cartitems)
+         {
+             <p>@item.Dish.Name</p>
+            <p>@item.Dish.Price</p>
+         }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CartId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

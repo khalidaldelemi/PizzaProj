@@ -86,7 +86,7 @@ namespace PizzaOnLine.Controllers
                     {
                         Ingredient = ingredient,
                         Dish = dish,
-                        Enabel = form.Keys.Any(x => x == $"checkboxes-{ingredient.Id}")
+                        Enabel = form.Keys.Any(x => x == $"checkboxes-{ingredient.IngredientId}")
                     };
                     _context.DishIngredients.Add(dishIngredient);
                 }
@@ -142,8 +142,8 @@ namespace PizzaOnLine.Controllers
                             var newDish = new DishIngredient
                             {
                                 DishId=id,
-                                IngredientId = item.Id,
-                                Enabel=form.Keys.Any(k=> k== $"Ingredient-{item.Id}")
+                                IngredientId = item.IngredientId,
+                                Enabel=form.Keys.Any(k=> k== $"Ingredient-{item.IngredientId}")
 
 
                             };
