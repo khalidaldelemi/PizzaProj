@@ -1,5 +1,6 @@
-﻿@model PizzaOnLine.Models.Cart
-
+﻿@model PizzaOnLine.Models.CartItem
+@inject PizzaOnLine.Services.IngredientService ingred
+@inject PizzaOnLine.Services.CartService cartSe
 @{
     ViewData["Title"] = "Edit";
 }
@@ -7,17 +8,30 @@
 <h2>Edit</h2>
 
 <h4>Cart</h4>
+@*@Model.DishsName
+
+@foreach (var item in ingred.AllIngredient())
+{
+    var check = cartSe.HasIngerdient(Model.DishId, item.IngredientId) ? "checked" : "";
+    <input type="checkbox" name="Ingredient-@item.IngredientId" @check />
+    <span asp-for="@item .Name">@item.Name</span>
+
+}*@
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CartId" />
-            <div class="form-group">
-                <label asp-for="applicationId" class="control-label"></label>
-                <input asp-for="applicationId" class="form-control" />
-                <span asp-validation-for="applicationId" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="CartItemId" />
+            @Model.DishsName
+
+    @foreach (var item in ingred.AllIngredient())
+    {
+        var check = cartSe.HasIngerdient(Model.CartItemId, item.IngredientId) ? "checked" : "";
+        <input type="checkbox" name="Ingredient-@item.IngredientId" @check />
+        <span asp-for="@item.Name">@item.Name</span>
+
+    }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
@@ -28,4 +42,9 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
 

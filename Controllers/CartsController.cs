@@ -55,13 +55,7 @@ namespace PizzaOnLine.Controllers
 
             return View(cart);
         }
-        public IActionResult AddToCart(int id)
-        {
-            
-            //var cart = new Cart();
-            //cart 
-            return RedirectToAction("Details");
-        }
+      
 
         // GET: Carts/Create
         public IActionResult Create()
@@ -101,7 +95,7 @@ namespace PizzaOnLine.Controllers
                 return NotFound();
             }
 
-            var cart = await _context.Carts.SingleOrDefaultAsync(m => m.CartId == id);
+            var cart = await _context.CartItems.SingleOrDefaultAsync(m => m.CartItemId == id);
             if (cart == null)
             {
                 return NotFound();
@@ -114,9 +108,11 @@ namespace PizzaOnLine.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CartId,applicationId")] Cart cart)
+        public async Task<IActionResult> Edit(int id, CartItem cartItem,IFormCollection form)
         {
-            if (id != cart.CartId)
+            Cart cart;
+            var cartId = HttpContext.Session.GetInt32("CartSession");
+            if (id != cartItem.CartItemId)
             {
                 return NotFound();
             }
@@ -125,12 +121,29 @@ namespace PizzaOnLine.Controllers
             {
                 try
                 {
-                    _context.Update(cart);
-                    await _context.SaveChangesAsync();
+                    _cartservice.RemoveIngredientsByDish(id);
+                    foreach (var item in _cartservice.AllIngredient())
+                    {
+                        if (true)
+                        {
+                            var cartiteming = new CartItemIngredient
+                            {
+                                
+                                CartItemId= cartItem.CartItemId,
+                                IngredientId = item.IngredientId,
+                                Enabel = form.Keys.Any(k => k == $"Ingredient-{item.IngredientId}")
+
+
+                            };
+                            _context.Update(cartItem);
+                           
+                            await _context.SaveChangesAsync();
+                        }
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CartExists(cart.CartId))
+                    if (!CartExists(cartItem.CartId))
                     {
                         return NotFound();
                     }
@@ -139,9 +152,9 @@ namespace PizzaOnLine.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit));
             }
-            return View(cart);
+            return View();
         }
 
         // GET: Carts/Delete/5

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@inject PizzaOnLine.Services.IngredientService ingred
+@inject PizzaOnLine.Services.CartService cartSe
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -32,7 +36,12 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Categories" asp-action="Index">Category</a></li>
                     <li><a asp-area="" asp-controller="Dishes" asp-action="Index">Pizza</a></li>
-                    <li><a asp-area="" asp-controller="Carts" asp-action="Index">Cart</a></li>
+                   
+                    <li><a asp-area="" asp-controller="CartItems" asp-action="Index">Cart</a></li>
+                    @if (true)
+                    {
+
+                    }
                    @if (User.IsInRole("Admin"))
                    {
                     <li><a asp-area="" asp-controller="Ingredients" asp-action="Index">Ingredients</a></li>

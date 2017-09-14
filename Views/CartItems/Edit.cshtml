@@ -1,0 +1,63 @@
+﻿@model PizzaOnLine.Models.CartItem
+@inject PizzaOnLine.Services.IngredientService ingred
+@inject PizzaOnLine.Services.CartService cartSe
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>CartItem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CartItemId" />
+            <div class="form-group">
+                <label asp-for="CartId" class="control-label"></label>
+                <select asp-for="CartId" class="form-control" asp-items="ViewBag.CartId"></select>
+                <span asp-validation-for="CartId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DishId" class="control-label"></label>
+                <select asp-for="DishId" class="form-control" asp-items="ViewBag.DishId"></select>
+                <span asp-validation-for="DishId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DishsName" class="control-label"></label>
+                <input asp-for="DishsName" class="form-control" />
+                <span asp-validation-for="DishsName" class="text-danger"></span>
+            </div>
+            <div>
+
+                @foreach (var item in ingred.AllIngredient())
+                {
+                    var check = cartSe.HasIngerdient(Model.CartItemId, item.IngredientId) ? "checked" : "";
+                    <input type="checkbox" name="Ingredient-@item.IngredientId" @check />
+                    <span asp-for="@item.Name">@item.Name</span>
+
+                }
+            </div>
+            <div class="form-group">
+                <label asp-for="DishPrice" class="control-label"></label>
+                <input asp-for="DishPrice" class="form-control" />
+                <span asp-validation-for="DishPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -39,9 +39,9 @@ namespace PizzaOnLine.Data
                 
                 var cheese = new Ingredient { Name = "Cheese" ,Price= 5 };
                 var tomato = new Ingredient { Name = "Tomato" ,Price=5};
-                var ham = new Ingredient { Name = "Ham" ,Price=10 };
-                var bannan = new Ingredient { Name = "Bannan", Price = 10 };
-                var mashrom = new Ingredient { Name = "Mashroom", Price = 10};
+                var ham = new Ingredient { Name = "Ham" ,Price=5 };
+                var bannan = new Ingredient { Name = "Bannan", Price = 5 };
+                var mashrom = new Ingredient { Name = "Mashroom", Price =5};
                 var isberg = new Ingredient { Name = "romansalad", Price = 5};
         
                 var capricciosa = new Dish { Name = "Capricciosa", Price = 80 ,Category=pizza };
@@ -73,7 +73,7 @@ namespace PizzaOnLine.Data
                 margarita.DishIngredient = new List<DishIngredient>{ margaritaCheese,margaritaTomato};
                 hawaii.DishIngredient = new List<DishIngredient> { hawaiiCheese, hawaiiHam, hawaiiBannan, hawaiiTomato };
 
-                context.AddRange(tomato, ham, cheese, isberg);
+                context.AddRange(tomato, ham, cheese, isberg,mashrom);
 
                 context.AddRange(pizza, pasta, salad);
 
