@@ -26,9 +26,19 @@ namespace PizzaOnLine.Controllers
         // GET: CartItems
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.CartItems.Include(c => c.Cart).Include(c => c.Dish).ThenInclude(z=>z.DishIngredient)
-                .ThenInclude(d=> d.Ingredient).Where(x=>x.DishId==x.CartItemId);
-            return View(await applicationDbContext.ToListAsync());
+            var id = HttpContext.Session.GetInt32("CartSession");
+            var applicationDbContext = _context.Carts.Include(c => c.Cartitems).
+                ThenInclude(c => c.Dish)
+                .Include(x => x.Cartitems)
+                .ThenInclude(v => v.CartItemIngredient).
+                ThenInclude(i => i.Ingredient)
+                .FirstOrDefaultAsync(d => d.CartId == id);
+            return View(await applicationDbContext);
+        }
+        public IActionResult AddToCart (int id)
+        {
+            var test = _cartService.AddToCart(HttpContext, id);
+            return RedirectToAction("Index");
         }
 
         // GET: CartItems/Details/5
@@ -102,12 +112,15 @@ namespace PizzaOnLine.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CartItemId,CartId,DishId,Quantity,DishsName,DishPrice")] CartItem cartItem, IFormCollection form)
         {
+         
             var cartId = HttpContext.Session.GetInt32("CartSession");
             if (id != cartItem.CartItemId)
             {
+                
                 return NotFound();
             }
-
+            
+           
             if (ModelState.IsValid)
             {
                 try

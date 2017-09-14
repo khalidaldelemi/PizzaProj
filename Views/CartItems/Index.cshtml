@@ -1,6 +1,5 @@
-﻿@model IEnumerable<PizzaOnLine.Models.CartItem>
+﻿@model PizzaOnLine.Models.Cart
 @inject PizzaOnLine.Services.CartService cartSe
-
 @inject PizzaOnLine.Services.IngredientService ingredent
 @{
     ViewData["Title"] = "Index";
@@ -15,19 +14,19 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Quantity)
+                   Quantity
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.DishsName)
+                   DishsName
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.DishPrice)
+                    DishPrice
                 </th>
             <th>
-                @Html.DisplayNameFor(model => model.Cart)
+                Cart
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Dish)
+                Dish
             </th>
             <th>
                 Ingredent
@@ -36,7 +35,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Cartitems) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
@@ -54,7 +53,7 @@
                 @Html.DisplayFor(modelItem => item.Dish.DishId)
             </td>
             <td>
-             @cartSe.IngredentByCartItem(item.CartItemId)
+              @cartSe.IngredentByCartItem(item.CartItemId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CartItemId">Edit</a> |

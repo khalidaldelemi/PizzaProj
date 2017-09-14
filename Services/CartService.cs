@@ -41,7 +41,7 @@ namespace PizzaOnLine.Services
                 Quantity = 1,
                 DishPrice = dish.Price,
                 DishsName = dish.Name
-
+                
             };
             Con++;
             var inglist = new List<CartItemIngredient>();
@@ -63,25 +63,25 @@ namespace PizzaOnLine.Services
             cartItem.CartItemIngredient = inglist;
 
             cart.Cartitems.Add(cartItem);
-            if (cart.CartId != 0)
-            {
-                _context.Carts.Update(cart);
-            }
-            else
-            {
-                _context.Carts.Add(cart);
-            }
+                if (cart.CartId != 0)
+                {
+                    _context.Carts.Update(cart);
+                }
+                else
+                {
+                    _context.Carts.Add(cart);
+                }
 
-            _context.SaveChanges();
-            httpContext.Session.SetInt32("CartSession", cart.CartId);
-            return cart;
-
+                _context.SaveChanges();
+                httpContext.Session.SetInt32("CartSession", cart.CartId);
+                return cart;
+            
         }
         public List<Ingredient> AllIngredient()
         {
             return _context.Ingredients.ToList();
         }
-        public bool HasIngerdient(int id, int ingredientid)
+          public bool HasIngerdient(int id,int ingredientid)
         {
             var check = _context.CartItemIngredients.Any(z => z.CartItemId == id && z.IngredientId == ingredientid && z.Enabel);
             return check;
@@ -89,19 +89,19 @@ namespace PizzaOnLine.Services
 
         internal void RemoveIngredientsByDish(int id)
         {
-
-            var dishIng = _context.CartItemIngredients.Where(d => d.CartItemId == id);
-            foreach (var item in dishIng)
-            {
-
-
-                _context.Remove(item);
-
-            }
+            
+                var dishIng = _context.CartItemIngredients.Where(d => d.CartItemId == id);
+                foreach (var item in dishIng)
+                {
 
 
-            _context.SaveChanges();
+                    _context.Remove(item);
 
+                }
+
+
+                _context.SaveChanges();
+            
         }
         public string IngredentByCartItem(int id)
         {
@@ -113,5 +113,5 @@ namespace PizzaOnLine.Services
             }
             return dishIngredents;
         }
-    }
+        }
 }
