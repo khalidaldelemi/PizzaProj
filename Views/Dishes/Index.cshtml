@@ -12,14 +12,14 @@
 
 
 <div>
-    @foreach (var cat in Model)
+    @*@foreach (var cat in Model)
     {
         <hr />
        <p>@cat.Name</p>
         @foreach (var item in cat.dishes)
         {
             <hr />
-            @item.Name
+            @Html.DisplayFor(modelItem => item.Name)
             @item.Price
             @ingredent.IngredentByDish(item.DishId)
             <a asp-action="Edit" asp-route-id="@item.DishId">Edit</a> 
@@ -30,36 +30,43 @@
 
 
         }
-    }
+    }*@
 </div>
 
-    @*<table class="table">
+    <table class="table">
             <thead>
                 <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.Name)
+                            Name
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.)
+                          Price
                         </th>
                     <th>
                         Category
                     </th>
+                         
                     <th>
                        Ingerdents
                     </th>
                 </tr>
             </thead>
            
-@foreach (var item in Model)
-{
+@foreach (var cat in Model)
+   
+    {
     <tbody>
-     
+@foreach (var item in cat.dishes)
+{
+
+
                 <tr>
+                   
+
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                   </td>           
-                                  
+
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
@@ -70,9 +77,12 @@
                        <span>@ingredent.IngredentByDish(item.DishId)</span> 
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.DishId">Edit</a> 
-                        <a asp-action="Details" asp-route-id="@item.DishId">Details</a>
-                    </td>
+                        <a class="btn btn-default" asp-controller="CartItems" asp-action="AddToCart" asp-route-id="@item.DishId">
+                            <span class="glyphicon glyphicon-shopping-cart"></span>Add to Cart
+                        </a>
+                            <a asp-action="Edit" asp-route-id="@item.DishId">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.DishId">Details</a>
+</td>
                     @if (User.IsInRole("Admin"))
                     {
                         <td>
@@ -81,11 +91,12 @@
                             <a asp-action="Delete" asp-route-id="@item.DishId">Delete</a>
                         </td>
                     }
+                    
 
                 </tr>
-            
-        
+
+}
 
     </tbody>
 }
-        </table>*@
+        </table>

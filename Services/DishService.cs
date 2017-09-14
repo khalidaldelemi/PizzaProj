@@ -13,6 +13,7 @@ namespace PizzaOnLine.Services
         {
             _context = context;
         }
+        
         public bool HasIngerdient(int id,int ingredientid)
         {
             var check = _context.DishIngredients.Any(z => z.DishId == id && z.IngredientId == ingredientid);

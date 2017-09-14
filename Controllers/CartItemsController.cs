@@ -16,11 +16,15 @@ namespace PizzaOnLine.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly CartService _cartService;
+        private readonly DishService _dishService;
+        private readonly IngredientService _ingredientService;
 
-        public CartItemsController(ApplicationDbContext context,CartService cartService )
+        public CartItemsController(ApplicationDbContext context,CartService cartService ,DishService dishService,IngredientService ingredientService)
         {
             _context = context;
             _cartService = cartService;
+            _dishService = dishService;
+            _ingredientService = ingredientService;
         }
 
         // GET: CartItems
@@ -118,34 +122,57 @@ namespace PizzaOnLine.Controllers
             {
                 
                 return NotFound();
+
             }
             
-           
             if (ModelState.IsValid)
             {
                 try
                 {
+                  
+                    //foreach (var item in cartItem.Dish.DishIngredient)
+                    //{
+                    //    item.Ingredient.Price = 0;
+                    //}
                    _cartService.RemoveIngredientsByDish(id);
-                    foreach (var item in _cartService.AllIngredient())
+                    foreach (var ing in _cartService.AllIngredient())
                     {
-                        if (true)
-                        {
+                        
                             var cartiteming = new CartItemIngredient
                             {
 
                                 CartItemId = cartItem.CartItemId,
-                                IngredientId = item.IngredientId,
-                                IngredeintName=item.Name,
-                                Enabel = form.Keys.Any(k => k == $"Ingredient-{item.IngredientId}")
-
-
+                                IngredientId = ing.IngredientId,
+                                IngredeintName=ing.Name,
+                                Enabel = form.Keys.Any(k => k == $"Ingredient-{ing.IngredientId}"),
+                                CartItemIngredientPrice= + ing.Price,
+                                
+                                
                             };
-                            _context.Add(cartiteming);
-                        }
-                           
-                    }
-                    _context.Update(cartItem);
 
+                            _context.Add(cartiteming);
+                        
+
+
+                    }
+                    //var iteming = _cartService.IngredentByCartItem(cartItem.CartItemId);
+                    var newPrice = 0;
+
+                    _context.Update(cartItem);
+                    var newCartItem = _context.CartItems.Include(d => d.Dish).ThenInclude(x => x.DishIngredient).SingleOrDefault(c => c.CartItemId == id);
+
+                    //var di = _ingredientService.IngredentByDish(dish.DishId);
+                    foreach (var dishIngredient in newCartItem.Dish.DishIngredient)
+                    {
+                        foreach (var ing in cartItem.CartItemIngredient)
+                        {
+                            if (ing.IngredientId != dishIngredient.IngredientId)
+                            {
+                               newPrice=+ 5;
+                            }
+                        }
+                    }
+                    cartItem.DishPrice = cartItem.DishPrice + newPrice;
                     await _context.SaveChangesAsync();
 
                 }
