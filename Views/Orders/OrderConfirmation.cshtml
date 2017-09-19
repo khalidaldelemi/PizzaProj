@@ -1,11 +1,54 @@
-﻿@model PizzaOnLine.Models.Order
+﻿@model PizzaOnLine.Models.OrderConfirm
+
 @inject PizzaOnLine.Services.CartService cartSe
 
 
-<span>Thanks for Yours Shop</span>
-@foreach (var item in Model.Cart.Cartitems)
-{
-    @item.DishsName
-    @item.DishPrice
-}
-@cartSe.CalculateCartSum(Model.Cart.Cartitems.Select(f => f.CartItemId).FirstOrDefault())
+
+
+<div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div>
+            @Model.User.FirstName
+        </div>
+        <div>
+            @Model.User.LastName
+        </div>
+        <div>
+            @foreach (var item in Model.CartItems)
+            {
+            @item.Dish.Name
+            @item.Dish.Price
+
+
+            }
+        </div>
+    }
+
+    else
+    {
+        <table>
+            <tr><td>@Model.Order.FirstName</td></tr>
+            <tr><td>@Model.Order.LastName</td></tr>
+            <tr><td>@Model.Order.ShippingAddress</td></tr>
+            <tr><td>@Model.Order.PostalCode</td></tr>
+            <tr><td>@Model.Order.City</td></tr>
+            <tr><td>@Model.Order.Email</td></tr>
+            <tr><td>@Model.Order.PhoneNumber<br /><br /></td></tr>
+            <tr><td>@Model.Order.CardName</td></tr>
+            <tr><td>@Model.Order.CardNumber</td></tr>
+            <tr><td>@Model.Order.MMYY</td></tr>
+            <tr><td>@Model.Order.CVC</td></tr>
+
+
+            @foreach (var item in Model.Order.CartItem)
+            {
+                <tr><th>@item.Dish.Name</th></tr>
+                <tr><td>@item.DishPrice</td></tr>
+                <tr></tr>
+            }
+
+        </table>
+    }
+</div>
+@*@cartSe.CalculetPrisOrder(Model.Order.CartItem.Select(f => f.CartItemId).FirstOrDefault())*@

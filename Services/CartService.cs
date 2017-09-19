@@ -133,6 +133,10 @@ namespace PizzaOnLine.Services
             return totalPrice;
 
         }
+        public decimal CartItemPrice(int cartItemId)
+        {
+            return 111;
+        }
         public decimal CartItemPrice(int cartItemId, List<CartItemIngredient> cartItemIngredients, int dishID)
         {
 
@@ -150,6 +154,12 @@ namespace PizzaOnLine.Services
 
             var newPrice = _context.CartItems.Where(d => d.CartItemId == cartItemId).Select(c => c.Dish.Price + price).FirstOrDefault();
             return newPrice;
+        }
+        public decimal CalculetPrisOrder(int cartitem)
+        {
+            var totalOrder = _context.CartItems.Where(a => a.CartItemId == cartitem).Sum(x => x.DishPrice);
+
+            return totalOrder;
         }
     }
 }

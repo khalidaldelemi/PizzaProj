@@ -58,7 +58,7 @@ namespace PizzaOnLine.Controllers
             //return View(await applicationDbContext.ToListAsync());
             var cartId = HttpContext.Session.GetInt32("CartSession");
             var aUser = await _userManager.GetUserAsync(User);
-            if (User.IsInRole("User"))
+            if (User.Identity.IsAuthenticated)
             {
                 var newUser = new OrderViweModel
                 {
@@ -80,7 +80,7 @@ namespace PizzaOnLine.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<ActionResult> OrderPayment(OrderViweModel orderVM)
+        public async Task<ActionResult> OrderPayment(OrderViweModel orderviewmodel)
         {
             var cartId =(int) HttpContext.Session.GetInt32("CartSession");
             Cart cart;
@@ -104,13 +104,13 @@ namespace PizzaOnLine.Controllers
                 {
                     User = new ApplicationUser
                     {
-                        FirstName = orderVM.Myorder.FirstName,
-                        LastName = orderVM.Myorder.LastName,
-                        Address = orderVM.Myorder.ShippingAddress,
-                        PostalCode = orderVM.Myorder.PostalCode,
-                        City = orderVM.Myorder.City,
-                        Email = orderVM.Myorder.Email,
-                        PhoneNumber = orderVM.Myorder.PhoneNumber
+                        FirstName = orderviewmodel.User.FirstName,
+                        LastName = orderviewmodel.User.LastName,
+                        Address = orderviewmodel.User.Address,
+                        PostalCode = orderviewmodel.User.PostalCode,
+                        City = orderviewmodel.User.City,
+                        Email = orderviewmodel.User.Email,
+                        PhoneNumber = orderviewmodel.User.PhoneNumber
 
                     },
                     Myorder = new Order()
@@ -118,10 +118,10 @@ namespace PizzaOnLine.Controllers
                         CartId = cartId,
                         Cart= cart,
                         CartItem = cartItems,
-                        CardName = orderVM.Myorder.CardName,
-                        CardNumber = orderVM.Myorder.CardNumber,
-                        MMYY = orderVM.Myorder.MMYY,
-                        CVC = orderVM.Myorder.CVC
+                        CardName = orderviewmodel.Myorder.CardName,
+                        CardNumber = orderviewmodel.Myorder.CardNumber,
+                        MMYY = orderviewmodel.Myorder.MMYY,
+                        CVC = orderviewmodel.Myorder.CVC
                     }
                 };
                 return RedirectToAction("OrderConfirmation", newModel);
@@ -130,21 +130,21 @@ namespace PizzaOnLine.Controllers
             {
                 var newPayment = new Order()
                 {
-                    OrderId = orderVM.Myorder.OrderId,
-                    FirstName = orderVM.Myorder.FirstName,
-                    LastName = orderVM.Myorder.LastName,
-                    ShippingAddress = orderVM.Myorder.ShippingAddress,
-                    PostalCode = orderVM.Myorder.PostalCode,
-                    Email = orderVM.Myorder.Email,
-                    PhoneNumber = orderVM.Myorder.PhoneNumber,
-                    City = orderVM.Myorder.City,
+                    OrderId = orderviewmodel.Myorder.OrderId,
+                    FirstName = orderviewmodel.Myorder.FirstName,
+                    LastName = orderviewmodel.Myorder.LastName,
+                    ShippingAddress = orderviewmodel.Myorder.ShippingAddress,
+                    PostalCode = orderviewmodel.Myorder.PostalCode,
+                    Email = orderviewmodel.Myorder.Email,
+                    PhoneNumber = orderviewmodel.Myorder.PhoneNumber,
+                    City = orderviewmodel.Myorder.City,
                     CartId = cartId,
                     Cart = cart,
                     CartItem = cartItems,
-                    CardName = orderVM.Myorder.CardName,
-                    CardNumber = orderVM.Myorder.CardNumber,
-                    MMYY = orderVM.Myorder.MMYY,
-                    CVC = orderVM.Myorder.CVC
+                    CardName = orderviewmodel.Myorder.CardName,
+                    CardNumber = orderviewmodel.Myorder.CardNumber,
+                    MMYY = orderviewmodel.Myorder.MMYY,
+                    CVC = orderviewmodel.Myorder.CVC
                 };
 
                 await _context.Order.AddAsync(newPayment);
@@ -153,6 +153,68 @@ namespace PizzaOnLine.Controllers
                 return RedirectToAction("OrderConfirmation", newPayment);
             }
         }
+
+        public async Task<ActionResult> OrderConfirmation(int orderId, OrderConfirm orderConfirm)
+        {
+            var cartId = HttpContext.Session.GetInt32("CartSession");
+            var user = await _userManager.GetUserAsync(User);
+
+            if (User.Identity.IsAuthenticated)
+            {
+
+                var currentOrder = await _context.Carts
+
+                    .Include(x => x.Cartitems)
+                    .ThenInclude(x => x.CartItemIngredient)
+                    .ThenInclude(x => x.Ingredient)
+                    .Include(x => x.Cartitems)
+                    .ThenInclude(x => x.Dish)
+                    .SingleOrDefaultAsync(x => x.CartId == cartId);
+
+                var order = new Order()
+                {
+                    OrderId = orderId
+                };
+
+
+                var newOrder = new OrderConfirm
+                {
+                    Order = order,
+                    User = user,
+                    CartItems = currentOrder.Cartitems
+
+                };
+
+                var session = HttpContext.Session;
+                session.Remove("CartSession");
+                return View(newOrder);
+            }
+            else
+            {
+                var currentGuest = await _context.Order
+                    .Include(x => x.Cart)
+                    .ThenInclude(x => x.Cartitems)
+                    .ThenInclude(x => x.CartItemIngredient)
+                    .ThenInclude(x => x.Ingredient)
+                    .Include(x => x.CartItem)
+                    .ThenInclude(x => x.Dish)
+                    .SingleOrDefaultAsync(x => x.OrderId == orderId && x.CartId == cartId);
+
+                var currentCart = currentGuest.CartItem.ToList();
+
+                var newOrder = new OrderConfirm
+                {
+                    Order = currentGuest
+                };
+
+                var session = HttpContext.Session;
+                session.Remove("CartSession");
+
+                return View(newOrder);
+            }
+        }
+
+
 
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
