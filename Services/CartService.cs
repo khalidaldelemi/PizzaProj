@@ -13,9 +13,11 @@ namespace PizzaOnLine.Services
     public class CartService
     {
         private readonly ApplicationDbContext _context;
-        public CartService(ApplicationDbContext context, IServiceProvider serviceProvider)
+        private readonly IngredientService _ingredientService;
+        public CartService(ApplicationDbContext context, IServiceProvider serviceProvider,IngredientService ingredientService)
         {
             _context = context;
+            _ingredientService = ingredientService;
         }
 
 
@@ -41,7 +43,7 @@ namespace PizzaOnLine.Services
                 Quantity = 1,
                 DishPrice = dish.Price,
                 DishsName = dish.Name
-                
+
             };
             Con++;
             var inglist = new List<CartItemIngredient>();
@@ -63,25 +65,25 @@ namespace PizzaOnLine.Services
             cartItem.CartItemIngredient = inglist;
 
             cart.Cartitems.Add(cartItem);
-                if (cart.CartId != 0)
-                {
-                    _context.Carts.Update(cart);
-                }
-                else
-                {
-                    _context.Carts.Add(cart);
-                }
+            if (cart.CartId != 0)
+            {
+                _context.Carts.Update(cart);
+            }
+            else
+            {
+                _context.Carts.Add(cart);
+            }
 
-                _context.SaveChanges();
-                httpContext.Session.SetInt32("CartSession", cart.CartId);
-                return cart;
-            
+            _context.SaveChanges();
+            httpContext.Session.SetInt32("CartSession", cart.CartId);
+            return cart;
+
         }
         public List<Ingredient> AllIngredient()
         {
             return _context.Ingredients.ToList();
         }
-          public bool HasIngerdient(int id,int ingredientid)
+        public bool HasIngerdient(int id, int ingredientid)
         {
             var check = _context.CartItemIngredients.Any(z => z.CartItemId == id && z.IngredientId == ingredientid && z.Enabel);
             return check;
@@ -89,21 +91,21 @@ namespace PizzaOnLine.Services
 
         internal void RemoveIngredientsByDish(int id)
         {
-            
-                var dishIng = _context.CartItemIngredients.Where(d => d.CartItemId == id);
-                foreach (var item in dishIng)
-                {
+
+            var dishIng = _context.CartItemIngredients.Where(d => d.CartItemId == id);
+            foreach (var item in dishIng)
+            {
 
 
-                    _context.Remove(item);
+                _context.Remove(item);
 
-                }
+            }
 
 
-                _context.SaveChanges();
-            
+            _context.SaveChanges();
+
         }
-   
+
         public string IngredentByCartItem(int id)
         {
             var ing = _context.CartItemIngredients.Include(In => In.Ingredient).Where(In => In.CartItemId == id && In.Enabel);
@@ -114,5 +116,40 @@ namespace PizzaOnLine.Services
             }
             return dishIngredents;
         }
+            public decimal? CalculateCartSum(int cartItemId)
+        {
+            decimal? totalPrice = 0;
+
+            decimal? price = _context.CartItems.Where(i => i.CartItemId == cartItemId)
+                      .Select(q => q.Quantity * q.Dish.Price).Sum();
+
+            foreach (var itemPrice in _context.CartItems)
+            {
+                totalPrice += itemPrice.Dish.Price;
+
+                totalPrice += itemPrice.CartItemIngredient.Where(s => s.Enabel).Sum(cii => itemPrice.Dish
+                    .DishIngredient.Any(di => di.IngredientId == cii.IngredientId) ? 0 : cii.Ingredient.Price);
+            }
+            return totalPrice;
+
         }
+        public decimal CartItemPrice(int cartItemId, List<CartItemIngredient> cartItemIngredients, int dishID)
+        {
+
+            var dishIngredients = _ingredientService.ingredwnt(dishID);
+            var ingredient = dishIngredients.Select(x => x.Ingredient).ToList();
+
+            var addedIngredients = cartItemIngredients.Where(c => c.Enabel).Select(v => v.Ingredient).ToList();
+
+            addedIngredients.RemoveAll(a => ingredient.Contains(a));
+            var price = 0;
+            foreach (var item in addedIngredients)
+            {
+                price += Convert.ToInt32(item.Price);
+            }
+
+            var newPrice = _context.CartItems.Where(d => d.CartItemId == cartItemId).Select(c => c.Dish.Price + price).FirstOrDefault();
+            return newPrice;
+        }
+    }
 }

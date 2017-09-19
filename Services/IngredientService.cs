@@ -43,5 +43,12 @@ namespace PizzaOnLine.Services
 
             _context.SaveChanges();
         }
+        public List<DishIngredient> ingredwnt (int id)
+        {
+            var dishinger = _context.DishIngredients.Include(s => s.Ingredient)
+                .Where(s => s.DishId == id && s.Enabel).ToList();
+           
+            return dishinger;
+        }
     }
 }

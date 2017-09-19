@@ -8,7 +8,7 @@ namespace PizzaOnLine.Models
         public string Name { get; set; }
         public decimal Price { get; set; }
         public List<DishIngredient> DishIngredients { get; set; }
-        public List<CartItemIngredient> cartItemIngredient { get; set; }
+        public List<CartItemIngredient> CartItemIngredient { get; set; }
 
     }
 }

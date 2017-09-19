@@ -40,7 +40,7 @@ namespace PizzaOnLine.Data
 
             builder.Entity<CartItemIngredient>()
                 .HasOne(ci => ci.Ingredient)
-                .WithMany(i => i.cartItemIngredient)
+                .WithMany(i => i.CartItemIngredient)
                 .HasForeignKey(ci => ci.IngredientId);
 
 
@@ -58,5 +58,6 @@ namespace PizzaOnLine.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<CartItemIngredient> CartItemIngredients { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<PizzaOnLine.Models.Order> Order { get; set; }
     }
 }

@@ -11,24 +11,26 @@ namespace PizzaOnLine.Data
     {
         public static void Initialize(UserManager<ApplicationUser> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
         {
-            var aUser = new ApplicationUser
-            {
-                UserName = "Test@test.com",
-                Email = "Test@test.com"
-            };
-            var userResult = userManager.CreateAsync(aUser, "Pa$$w0rd").Result;
+            //var aUser = new ApplicationUser
+            //{
+            //    UserName = "Test@test.com",
+            //    Email = "Test@test.com"
+            //};
+            //var userResult = userManager.CreateAsync(aUser, "Pa$$w0rd").Result;
 
-            var adminRole = new IdentityRole { Name = "Admin" };
-            var roleResult = roleManager.CreateAsync(adminRole).Result;
+            //var adminRole = new IdentityRole { Name = "Admin" };
+            //var roleResult = roleManager.CreateAsync(adminRole).Result;
 
-            var adminUser = new ApplicationUser
-            {
-                UserName = "admin@test.com",
-                Email = "admin@test.com"
-            };
-            var adminUserResult = userManager.CreateAsync(adminUser, "Pa$$w0rd").Result;
+            //var adminUser = new ApplicationUser
+            //{
+            //    UserName = "admin@test.com",
+            //    Email = "admin@test.com"
+            //};
+            //var adminUserResult = userManager.CreateAsync(adminUser, "Pa$$w0rd").Result;
 
-            var roleAddedResult = userManager.AddToRoleAsync(adminUser, "Admin").Result;
+            //var roleAddedResult = userManager.AddToRoleAsync(adminUser, "Admin").Result;
+            CreateUser(userManager, roleManager);
+            NewAdmin(userManager, roleManager);
 
             if (!context.Dishes.Any())
             {
@@ -85,6 +87,45 @@ namespace PizzaOnLine.Data
                 context.SaveChanges();
             }
         }
-        
+        public static void NewAdmin(UserManager<ApplicationUser> userManager ,RoleManager<IdentityRole> roleManager)
+        {
+            var admin = new IdentityRole { Name = "Admin" };
+            var roleResult = roleManager.CreateAsync(admin).Result;
+            var adminUser = new ApplicationUser
+            {
+                UserName = "admin@test.se",
+                Email = "admin.test.se",
+                FirstName = "khalid",
+                LastName = "Ali",
+                City = "Stockholm",
+                Address = "servitutsvägen 13",
+                PostalCode = "14559",
+                PhoneNumber = "123456",
+
+
+            };
+            var adminResult = userManager.CreateAsync(adminUser, "Password12").Result;
+            userManager.AddPasswordAsync(adminUser, "Admin");
+        }
+        private static void CreateUser(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            var userRole = new IdentityRole { Name = "User" };
+            var userResult = roleManager.CreateAsync(userRole).Result;
+            var user = new ApplicationUser
+            {
+                UserName = "student@test.com",
+                Email = "student@test.com",
+                PhoneNumber = "123456",
+                Address = "storgaten 1",
+                PostalCode = "12345",
+                City = "Stockholm",
+                FirstName = "Student",
+                LastName = "Test"
+            };
+
+            var userUserResult = userManager.CreateAsync(user, "Test1234!").Result;
+            userManager.AddToRoleAsync(user, "User");
+        }
+
     }
 }

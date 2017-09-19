@@ -19,7 +19,7 @@ namespace PizzaOnLine.Controllers
         private readonly DishService _dishService;
         private readonly IngredientService _ingredientService;
 
-        public CartItemsController(ApplicationDbContext context,CartService cartService ,DishService dishService,IngredientService ingredientService)
+        public CartItemsController(ApplicationDbContext context, CartService cartService, DishService dishService, IngredientService ingredientService)
         {
             _context = context;
             _cartService = cartService;
@@ -37,9 +37,10 @@ namespace PizzaOnLine.Controllers
                 .ThenInclude(v => v.CartItemIngredient).
                 ThenInclude(i => i.Ingredient)
                 .FirstOrDefaultAsync(d => d.CartId == id);
+
             return View(await applicationDbContext);
         }
-        public IActionResult AddToCart (int id)
+        public IActionResult AddToCart(int id)
         {
             var test = _cartService.AddToCart(HttpContext, id);
             return RedirectToAction("Index");
@@ -116,63 +117,47 @@ namespace PizzaOnLine.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CartItemId,CartId,DishId,Quantity,DishsName,DishPrice")] CartItem cartItem, IFormCollection form)
         {
-         
             var cartId = HttpContext.Session.GetInt32("CartSession");
             if (id != cartItem.CartItemId)
             {
-                
                 return NotFound();
-
             }
-            
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                  
-                    //foreach (var item in cartItem.Dish.DishIngredient)
-                    //{
-                    //    item.Ingredient.Price = 0;
-                    //}
-                   _cartService.RemoveIngredientsByDish(id);
+                    _cartService.RemoveIngredientsByDish(id);
                     foreach (var ing in _cartService.AllIngredient())
                     {
-                        
-                            var cartiteming = new CartItemIngredient
-                            {
-
-                                CartItemId = cartItem.CartItemId,
-                                IngredientId = ing.IngredientId,
-                                IngredeintName=ing.Name,
-                                Enabel = form.Keys.Any(k => k == $"Ingredient-{ing.IngredientId}"),
-                                CartItemIngredientPrice= + ing.Price,
-                                
-                                
-                            };
-
-                            _context.Add(cartiteming);
-                        
-
-
-                    }
-                    //var iteming = _cartService.IngredentByCartItem(cartItem.CartItemId);
-                    var newPrice = 0;
-
-                    _context.Update(cartItem);
-                    var newCartItem = _context.CartItems.Include(d => d.Dish).ThenInclude(x => x.DishIngredient).SingleOrDefault(c => c.CartItemId == id);
-
-                    //var di = _ingredientService.IngredentByDish(dish.DishId);
-                    foreach (var dishIngredient in newCartItem.Dish.DishIngredient)
-                    {
-                        foreach (var ing in cartItem.CartItemIngredient)
+                        var cartiteming = new CartItemIngredient
                         {
-                            if (ing.IngredientId != dishIngredient.IngredientId)
-                            {
-                               newPrice=+ 5;
-                            }
-                        }
+
+                            CartItemId = cartItem.CartItemId,
+                            IngredientId = ing.IngredientId,
+                            IngredeintName = ing.Name,
+                            Enabel = form.Keys.Any(k => k == $"Ingredient-{ing.IngredientId}"),
+                            CartItemIngredientPrice = +ing.Price,
+
+                        };
+                        _context.Add(cartiteming);
                     }
-                    cartItem.DishPrice = cartItem.DishPrice + newPrice;
+
+                    //var newPrice = 0;
+                    //_context.Update(cartItem);
+                    //var oldCartItem = _context.CartItems.Include(d => d.Dish).ThenInclude(x => x.DishIngredient).SingleOrDefault(c => c.CartItemId == id);
+
+                    //foreach (var dishIngredient in oldCartItem.Dish.DishIngredient)
+                    //{
+                    //    foreach (var ing in cartItem.CartItemIngredient)
+                    //    {
+                    //        if (ing.IngredientId != dishIngredient.IngredientId)
+                    //        {
+                    //            newPrice = +5;
+                    //        }
+                    //    }
+                    //}
+                    
                     await _context.SaveChangesAsync();
 
                 }
@@ -201,11 +186,10 @@ namespace PizzaOnLine.Controllers
             {
                 return NotFound();
             }
-
             var cartItem = await _context.CartItems
-                .Include(c => c.Cart)
-                .Include(c => c.Dish)
-                .SingleOrDefaultAsync(m => m.CartItemId == id);
+               .Include(c => c.Cart)
+               .Include(c => c.Dish)
+               .SingleOrDefaultAsync(m => m.CartItemId == id);
             if (cartItem == null)
             {
                 return NotFound();

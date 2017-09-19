@@ -1,6 +1,7 @@
 ﻿@model PizzaOnLine.Models.Cart
 @inject PizzaOnLine.Services.CartService cartSe
 @inject PizzaOnLine.Services.IngredientService ingredent
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -35,6 +36,7 @@
         </tr>
     </thead>
     <tbody>
+    
 @foreach (var item in Model.Cartitems) {
         <tr>
             <td>
@@ -44,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.DishsName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DishPrice)
+              @cartSe.CartItemPrice(item.CartItemId, item.CartItemIngredient, item.DishId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Cart.CartId)
@@ -58,9 +60,17 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CartItemId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.CartItemId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CartItemId">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.CartItemId">Remove</a>
             </td>
-        </tr>
-}
+            </tr>
+      }
     </tbody>
 </table>
+Total Price
+@cartSe.CalculateCartSum(Model.Cartitems.Select(f=>f.CartItemId).FirstOrDefault())
+
+<div>
+
+    <button><a asp-controller="Orders" asp-action="OrderPayment">Check out</a></button>
+
+</div>

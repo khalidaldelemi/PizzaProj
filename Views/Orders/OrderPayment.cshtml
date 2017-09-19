@@ -1,0 +1,114 @@
+﻿@model PizzaOnLine.Models.OrderViweModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<form asp-action="OrderPayment" asp-controller="Orders" method="post">
+    <div class="row">
+        <div class="col-lg-4">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="form-group">
+                    <label asp-for="User.FirstName"></label>
+                    <input asp-for="User.FirstName" class="form-control" />
+                    <span asp-validation-for="User.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.LastName"></label>
+                    <input asp-for="User.LastName" class="form-control" />
+                    <span asp-validation-for="User.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.Address"></label>
+                    <input asp-for="User.Address" class="form-control" />
+                    <span asp-validation-for="User.Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.PostalCode"></label>
+                    <input asp-for="User.PostalCode" class="form-control" />
+                    <span asp-validation-for="User.PostalCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.City"></label>
+                    <input asp-for="User.City" class="form-control" />
+                    <span asp-validation-for="User.City" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.Email"></label>
+                    <input asp-for="User.Email" class="form-control" />
+                    <span asp-validation-for="User.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="User.PhoneNumber"></label>
+                    <input asp-for="User.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="Myorder.FirstName"></label>
+                    <input asp-for="Myorder.FirstName" class="form-control" />
+                    <span asp-validation-for="Myorder.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Myorder.LastName"></label>
+                    <input asp-for="Myorder.LastName" class="form-control" />
+                    <span asp-validation-for="Myorder.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Myorder.ShippingAddress"></label>
+                    <input asp-for="Myorder.ShippingAddress" class="form-control" />
+                    <span asp-validation-for="Myorder.ShippingAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Myorder.PostalCode"></label>
+                    <input asp-for="Myorder.PostalCode" class="form-control" />
+                    <span asp-validation-for="Myorder.PostalCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Myorder.City"></label>
+                    <input asp-for="Myorder.City" class="form-control" />
+                    <span asp-validation-for="Myorder.City" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Myorder.Email"></label>
+                    <input asp-for="Myorder.Email" class="form-control" />
+                    <span asp-validation-for="Myorder.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Myorder.PhoneNumber"></label>
+                    <input asp-for="Myorder.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="Myorder.PhoneNumber" class="text-danger"></span>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label asp-for="Myorder.CardName"></label>
+                <input asp-for="Myorder.CardName" class="form-control" />
+                <span asp-validation-for="Myorder.CardName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Myorder.CardNumber"></label>
+                <input type="text" asp-for="Myorder.CardNumber" class="form-control" />
+                <span asp-validation-for="Myorder.CardNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Myorder.MMYY"></label>
+                <input type="text" asp-for="Myorder.MMYY" class="form-control" />
+                <span asp-validation-for="Myorder.MMYY" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Myorder.CVC"></label>
+                <input type="text" asp-for="Myorder.CVC" class="form-control" />
+                <span asp-validation-for="Myorder.CVC" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-default">Buy</button>
+</form>

@@ -12,6 +12,6 @@ namespace PizzaOnLine.Models
         public ApplicationUser applicationUser { get; set; }
         public int applicationId { get; set; }
         public List<CartItem> Cartitems { get; set; } = new List<CartItem>();
-
+      
     }
 }
