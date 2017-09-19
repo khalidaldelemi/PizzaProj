@@ -44,11 +44,11 @@
             @foreach (var item in Model.Order.CartItem)
             {
                 <tr><th>@item.Dish.Name</th></tr>
-                <tr><td>@item.DishPrice</td></tr>
+                <tr><td>@cartSe.CartItemPrice(item.CartItemId)</td></tr>
                 <tr></tr>
             }
 
         </table>
     }
 </div>
-@*@cartSe.CalculetPrisOrder(Model.Order.CartItem.Select(f => f.CartItemId).FirstOrDefault())*@
+@Model.Order.CartItem.Sum(p => p.Dish.Price * p.Quantity)

@@ -13,7 +13,7 @@ namespace PizzaOnLine.Models
         public int Quantity { get; set; }
         public List<CartItemIngredient> CartItemIngredient { get; set; }
         public string DishsName { get; set; }
-        public int DishPrice { get; set; }
+        //public int DishPrice { get; set; }
 
 
 

@@ -41,7 +41,7 @@ namespace PizzaOnLine.Services
                 Dish = dish,
                 DishId = dish.DishId,
                 Quantity = 1,
-                DishPrice = dish.Price,
+                //DishPrice = dish.Price,
                 DishsName = dish.Name
 
             };
@@ -105,7 +105,13 @@ namespace PizzaOnLine.Services
             _context.SaveChanges();
 
         }
+        public List<CartItemIngredient> ingredwnt(int id)
+        {
+            var itemIngr = _context.CartItemIngredients.Include(s => s.Ingredient)
+                .Where(s => s.CartItemId == id && s.Enabel).ToList();
 
+            return itemIngr;
+        }
         public string IngredentByCartItem(int id)
         {
             var ing = _context.CartItemIngredients.Include(In => In.Ingredient).Where(In => In.CartItemId == id && In.Enabel);
@@ -116,7 +122,8 @@ namespace PizzaOnLine.Services
             }
             return dishIngredents;
         }
-            public decimal? CalculateCartSum(int cartItemId)
+
+        public decimal? CalculateCartSum(int cartItemId)
         {
             decimal? totalPrice = 0;
 
@@ -133,10 +140,19 @@ namespace PizzaOnLine.Services
             return totalPrice;
 
         }
+
         public decimal CartItemPrice(int cartItemId)
         {
-            return 111;
+
+            
+            var dishId = _context.CartItems.Include(x => x.Dish).Where(s => s.CartItemId == cartItemId).SingleOrDefault();
+            var cartIteming = ingredwnt(cartItemId);
+            var nn = dishId.Dish.DishId;
+           var totalItem= CartItemPrice(cartItemId, cartIteming, nn);
+            return totalItem;
+
         }
+
         public decimal CartItemPrice(int cartItemId, List<CartItemIngredient> cartItemIngredients, int dishID)
         {
 
@@ -156,8 +172,9 @@ namespace PizzaOnLine.Services
             return newPrice;
         }
         public decimal CalculetPrisOrder(int cartitem)
+
         {
-            var totalOrder = _context.CartItems.Where(a => a.CartItemId == cartitem).Sum(x => x.DishPrice);
+            var totalOrder = _context.CartItems.Where(a => a.CartItemId == cartitem).Sum(x => this.CartItemPrice(x.CartItemId));
 
             return totalOrder;
         }
