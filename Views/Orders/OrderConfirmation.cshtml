@@ -3,7 +3,7 @@
 @inject PizzaOnLine.Services.CartService cartSe
 
 
-
+<h3>Thanks For Your Order</h3>
 
 <div>
     @if (User.Identity.IsAuthenticated)
@@ -40,15 +40,26 @@
             <tr><td>@Model.Order.MMYY</td></tr>
             <tr><td>@Model.Order.CVC</td></tr>
 
-
+            @{ 
+                decimal totalPrice = 0;
+            }
             @foreach (var item in Model.Order.CartItem)
             {
+                {
+                    var cartitemprice = cartSe.CartItemPrice(item.CartItemId);
+
+                    totalPrice += cartitemprice;
+                }
+
                 <tr><th>@item.Dish.Name</th></tr>
                 <tr><td>@cartSe.CartItemPrice(item.CartItemId)</td></tr>
                 <tr></tr>
+                
             }
 
         </table>
+        @totalPrice
     }
 </div>
-@Model.Order.CartItem.Sum(p => p.Dish.Price * p.Quantity)
+
+@*@cartSe.CalculetPrisOrder(Model.Order.CartItem.Select(x=> x.CartItemId))*@
